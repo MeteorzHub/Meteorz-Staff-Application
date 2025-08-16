@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meteorz Sideloading Staff Application</title>
+  <style>
+    /* General styling */
+    body {
+      background: #000;
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+    }
+
+    header {
+      text-align: center;
+      padding: 2rem 1rem;
+      font-size: 1.8rem;
+      font-weight: bold;
+      background: linear-gradient(90deg, #fff, #aaa, #fff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 8px rgba(255,255,255,0.5);
+    }
+
+    form {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(6px);
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 20px rgba(255,255,255,0.2);
+      max-width: 600px;
+      width: 90%;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    label {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      display: block;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border-radius: 0.5rem;
+      border: none;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    input:focus, textarea:focus {
+      background: rgba(255,255,255,0.2);
+      box-shadow: 0 0 8px rgba(255,255,255,0.6);
+    }
+
+    button {
+      padding: 1rem;
+      border: none;
+      border-radius: 0.5rem;
+      background: linear-gradient(90deg, #fff, #999);
+      color: #000;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(255,255,255,0.8);
+    }
+
+    .success, .error {
+      text-align: center;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    .success { color: #4CAF50; }
+    .error { color: #FF5252; }
+  </style>
+</head>
+<body>
+  <header>
+    Meteorz Sideloading Server Official Staff Team Application
+  </header>
+
+  <form id="appForm">
+    <div>
+      <label for="username">Discord Username</label>
+      <input type="text" id="username" required>
+    </div>
+    <div>
+      <label for="age">Age</label>
+      <input type="number" id="age" required>
+    </div>
+    <div>
+      <label for="experience">Why do you want to join the staff team?</label>
+      <textarea id="experience" rows="4" required></textarea>
+    </div>
+    <div>
+      <label for="skills">What skills/experience do you bring?</label>
+      <textarea id="skills" rows="4" required></textarea>
+    </div>
+    <div>
+      <label for="activity">How active can you be per week?</label>
+      <input type="text" id="activity" required>
+    </div>
+    <button type="submit">Submit Application</button>
+    <div id="response"></div>
+  </form>
+
+  <script>
+    const form = document.getElementById("appForm");
+    const responseBox = document.getElementById("response");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById("username").value;
+      const age = document.getElementById("age").value;
+      const experience = document.getElementById("experience").value;
+      const skills = document.getElementById("skills").value;
+      const activity = document.getElementById("activity").value;
+
+      const payload = {
+        content: "**New Staff Application Submitted**",
+        embeds: [{
+          title: "Staff Application",
+          color: 16777215,
+          fields: [
+            { name: "Username", value: username },
+            { name: "Age", value: age },
+            { name: "Why they want to join", value: experience },
+            { name: "Skills/Experience", value: skills },
+            { name: "Activity", value: activity }
+          ],
+          footer: { text: "Meteorz Sideloading Server" }
+        }]
+      };
+
+      try {
+        const webhookUrl = "https://discord.com/api/webhooks/1406273490625237102/82eUO6uhsP1OAGEQ0FOmfViX_bGFXknCS2dYeTxaUXq4Ki0qtW67FRr_dQ8NcOG3-HFk";
+        
+        const res = await fetch(webhookUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+          responseBox.innerHTML = "<p class='success'>✅ Application submitted successfully!</p>";
+          form.reset();
+        } else {
+          responseBox.innerHTML = "<p class='error'>❌ Error submitting application.</p>";
+        }
+      } catch (err) {
+        responseBox.innerHTML = "<p class='error'>⚠️ Network error.</p>";
+      }
+    });
+  </script>
+</body>
+</html>
