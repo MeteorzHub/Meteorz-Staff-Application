@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Meteorz Sideloading Staff Application</title>
   <style>
-    /* General styling */
     body {
       background: #000;
       color: #fff;
@@ -36,11 +35,18 @@
       padding: 2rem;
       border-radius: 1rem;
       box-shadow: 0 0 20px rgba(255,255,255,0.2);
-      max-width: 600px;
+      max-width: 700px;
       width: 90%;
       display: flex;
       flex-direction: column;
-      gap: 1.2rem;
+      gap: 1.5rem;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      margin-top: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      padding-bottom: 0.5rem;
     }
 
     label {
@@ -99,26 +105,48 @@
   </header>
 
   <form id="appForm">
-    <div>
-      <label for="username">Discord Username</label>
-      <input type="text" id="username" required>
-    </div>
-    <div>
-      <label for="age">Age</label>
-      <input type="number" id="age" required>
-    </div>
-    <div>
-      <label for="experience">Why do you want to join the staff team?</label>
-      <textarea id="experience" rows="4" required></textarea>
-    </div>
-    <div>
-      <label for="skills">What skills/experience do you bring?</label>
-      <textarea id="skills" rows="4" required></textarea>
-    </div>
-    <div>
-      <label for="activity">How active can you be per week?</label>
-      <input type="text" id="activity" required>
-    </div>
+    <!-- General Info -->
+    <h2>Basic Info</h2>
+    <label for="username">Discord Username</label>
+    <input type="text" id="username" required>
+
+    <label for="age">Age</label>
+    <input type="number" id="age" required>
+
+    <!-- General Questions (IQ test) -->
+    <h2>General Questions</h2>
+    <label for="math">Solve: 15 × 4 + 6 = ?</label>
+    <input type="text" id="math" required>
+
+    <label for="logic">If a train leaves at 3 PM and arrives at 7 PM, how many hours was the trip?</label>
+    <input type="text" id="logic" required>
+
+    <label for="knowledge">Who is the current President of the United States?</label>
+    <input type="text" id="knowledge" required>
+
+    <!-- Staff Application -->
+    <h2>Staff Application Questions</h2>
+    <label for="blacklist">What is a blacklist?</label>
+    <textarea id="blacklist" rows="2" required></textarea>
+
+    <label for="grammar">Will you use proper grammar?</label>
+    <input type="text" id="grammar" required>
+
+    <label for="active">Will you be active?</label>
+    <input type="text" id="active" required>
+
+    <label for="rules">Do you understand you will be demoted if you break rules?</label>
+    <input type="text" id="rules" required>
+
+    <label for="spam">If someone is spamming in chat, what will you do?</label>
+    <textarea id="spam" rows="2" required></textarea>
+
+    <label for="racism">If someone starts saying racist slurs, what will you do?</label>
+    <textarea id="racism" rows="2" required></textarea>
+
+    <label for="sideloading">On a scale of 1–10, how good are you at sideloading?</label>
+    <input type="number" id="sideloading" min="1" max="10" required>
+
     <button type="submit">Submit Application</button>
     <div id="response"></div>
   </form>
@@ -130,31 +158,38 @@
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const username = document.getElementById("username").value;
-      const age = document.getElementById("age").value;
-      const experience = document.getElementById("experience").value;
-      const skills = document.getElementById("skills").value;
-      const activity = document.getElementById("activity").value;
+      // Collect inputs
+      const data = {
+        username: document.getElementById("username").value,
+        age: document.getElementById("age").value,
+        math: document.getElementById("math").value,
+        logic: document.getElementById("logic").value,
+        knowledge: document.getElementById("knowledge").value,
+        blacklist: document.getElementById("blacklist").value,
+        grammar: document.getElementById("grammar").value,
+        active: document.getElementById("active").value,
+        rules: document.getElementById("rules").value,
+        spam: document.getElementById("spam").value,
+        racism: document.getElementById("racism").value,
+        sideloading: document.getElementById("sideloading").value
+      };
 
+      // Discord webhook payload
       const payload = {
         content: "**New Staff Application Submitted**",
         embeds: [{
           title: "Staff Application",
           color: 16777215,
-          fields: [
-            { name: "Username", value: username },
-            { name: "Age", value: age },
-            { name: "Why they want to join", value: experience },
-            { name: "Skills/Experience", value: skills },
-            { name: "Activity", value: activity }
-          ],
+          fields: Object.entries(data).map(([key, val]) => ({
+            name: key.charAt(0).toUpperCase() + key.slice(1),
+            value: val || "N/A"
+          })),
           footer: { text: "Meteorz Sideloading Server" }
         }]
       };
 
       try {
-        const webhookUrl = "https://discord.com/api/webhooks/1406273490625237102/82eUO6uhsP1OAGEQ0FOmfViX_bGFXknCS2dYeTxaUXq4Ki0qtW67FRr_dQ8NcOG3-HFk";
-        
+        const webhookUrl = "https://discord.com/api/webhooks/1406273490625237102/82eUO6uhsP1OAGEQ0FOmfViX_bGFXknCS2dYeTxaUXq4Ki0qtW67FRr_dQ8NcOG3-HFk"; // replace or obfuscate
         const res = await fetch(webhookUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
